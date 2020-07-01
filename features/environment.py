@@ -4,7 +4,7 @@
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 # EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
@@ -19,37 +19,57 @@
 # trademarks of QuantumBlack. The License does not grant you any right or
 # license to the QuantumBlack Trademarks. You may not use the QuantumBlack
 # Trademarks or any confusingly similar mark as a trademark for your product,
-# or use the QuantumBlack Trademarks in any other manner that might cause
+#     or use the QuantumBlack Trademarks in any other manner that might cause
 # confusion in the marketplace, including but not limited to in advertising,
 # on websites, or on software.
 #
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""
-This module contains an example test.
+"""Behave environment setup commands"""
 
-Tests should be placed in ``src/tests``, in modules that mirror your
-project's structure, and in files named test_*.py. They are simply functions
-named ``test_*`` which test a unit of logic.
-
-To run the tests, run ``kedro test``.
-"""
+import os
+import shutil
+import stat
+import subprocess
+import tempfile
+import venv
 from pathlib import Path
 
-import pytest
 
-from {{cookiecutter.python_package}}.run import ProjectContext
+def create_new_venv() -> Path:
+    """Create a new venv.
+    Returns:
+        path to created venv
+    """
+    # Create venv
+    venv_dir = Path(tempfile.mkdtemp())
+    venv.main([str(venv_dir)])
+    return venv_dir
 
 
-@pytest.fixture
-def project_context():
-    return ProjectContext(str(Path.cwd()))
+def before_scenario(context, scenario):
+    """Environment preparation before each test is run.
+    """
+
+    context.venv_dir = create_new_venv()
+    bin_dir = context.venv_dir / "bin"
+    context.pip = str(bin_dir / "pip")
+    context.python = str(bin_dir / "python")
+    context.kedro = str(bin_dir / "kedro")
+    context.starter_path = str(Path(__file__).parents[1])
+    subprocess.run([context.pip, "install", "-r", "test_requirements.txt"])
+    context.temp_dir = Path(tempfile.mkdtemp())
 
 
-class TestProjectContext:
-    def test_project_name(self, project_context):
-        assert project_context.project_name == "{{ cookiecutter.project_name }}"
+def after_scenario(context, scenario):
+    rmtree(str(context.temp_dir))
+    rmtree(str(context.venv_dir))
 
-    def test_project_version(self, project_context):
-        assert project_context.project_version == "{{ cookiecutter.kedro_version }}"
+
+def rmtree(top):
+    if os.name != "posix":
+        for root, _, files in os.walk(top, topdown=False):
+            for name in files:
+                os.chmod(os.path.join(root, name), stat.S_IWUSR)
+    shutil.rmtree(top)

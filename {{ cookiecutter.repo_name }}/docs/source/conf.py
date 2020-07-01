@@ -48,9 +48,9 @@
 import re
 
 from kedro.framework.cli.utils import find_stylesheets
-from recommonmark.transform import AutoStructify
 
-from {{ cookiecutter.python_package }} import __version__ as release
+from recommonmark.transform import AutoStructify
+from {{cookiecutter.python_package}} import __version__ as release
 
 # -- Project information -----------------------------------------------------
 
