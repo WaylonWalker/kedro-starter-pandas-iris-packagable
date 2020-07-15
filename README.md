@@ -1,4 +1,4 @@
-# Kedro Starter: Iris classification with example
+# Kedro Starter: pandas with example
 
 ## Introduction
 
