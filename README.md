@@ -1,20 +1,24 @@
-# Kedro Starter: pandas with example
+# The `kedro-starter-pandas-iris` Kedro starter
 
 ## Introduction
 
-This repository contains a Kedro project template with some initial configurations and an example pipeline to demonstrate best practices when using Kedro. It originates from our [Hello World](https://kedro.readthedocs.io/en/0.16.2/02_getting_started/04_hello_world.html) example.
+The code in this repository demonstrates best practice when working with Kedro. It contains a Kedro starter template with some initial configuration and an example pipeline, and originates from the [Kedro Iris dataset example](https://kedro.readthedocs.io/en/stable/02_get_started/05_example_project.html).
 
 
-### An example maching learning pipeline using only native `Kedro`
+### An example machine learning pipeline using only native `Kedro`
 
 ![](./images/iris_pipeline.png)
 
-This starter contains the code for an example machine learning pipeline that trains a random forrest classifier to classify iris based on the popular iris dataset. The pipeline includes two modular pipelines: a data engineering one and a data science one.
+This Kedro starter uses the simple and familiar [Iris dataset](https://www.kaggle.com/uciml/iris). It contains the code for an example machine learning pipeline that trains a random forest classifier to classify an iris. 
+
+The pipeline includes two modular pipelines: one for data engineering and one for data science.
 
 The data engineering pipeline includes:
-* A node to split the transformed data into training dataset and testing dataset using a configurable ration
+
+* A node to split the transformed data into training dataset and testing dataset using a configurable ratio
 
 The data science pipeline includes:
+
 * A node to train a simple multi-class logistic regression model
 * A node to make predictions using this pre-trained model on the testing dataset
 * A node to report the accuracy of the predictions performed by the model
